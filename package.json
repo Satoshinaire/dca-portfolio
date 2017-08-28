@@ -1,0 +1,33 @@
+{
+  "name": "portfolio-dca",
+  "version": "0.0.1",
+  "description": "",
+  "main": "daemon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-satoshinaire:Satoshinaire/portfolio-dca.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "ethereum",
+    "portfolio",
+    "dca",
+    "btc",
+    "eth",
+    "crypto",
+    "trader"
+  ],
+  "author": "Satoshinaire",
+  "license": "MIT",
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "daemon": "^1.1.0",
+    "dotenv": "^4.0.0",
+    "prettyjson-256": "^1.5.12",
+    "q": "^1.5.0",
+    "request": "^2.81.0"
+  }
+}

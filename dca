@@ -1,0 +1,87 @@
+#!/usr/bin/env node
+
+require('dotenv').config();
+
+var fs = require('fs');
+var pretty = require('prettyjson-256');
+var Portfolio = require('./lib/portfolio').Portfolio;
+
+var INTERVAL = 1000;
+var LOG_PATH = './logs/dca.log';
+
+var cycle_stop = false;
+var daemon = false;
+var timer;
+
+let portfolio = new Portfolio();
+
+process.argv.forEach(function (arg) {
+  if (arg === '-d') daemon = true;
+});
+
+process.on('SIGTERM', function () {
+  console.log('Received SIGTERM signal.');
+  stop();
+});
+
+(function cycle () {
+  timer = setTimeout(function () {
+    runTask();
+    if (!cycle_stop) cycle();
+  }, INTERVAL);
+})();
+
+function runTask () {
+  portfolio.get_price('btc')
+  .then(portfolio.do_buy.bind(portfolio))
+  .then((data) => {
+    console.log(data);
+    let entry = {
+      timestamp: new Date().toISOString(),
+      type: 'success',
+      message: data
+    }
+    log(entry);
+  })
+  .catch((err) => {
+    if (err) {
+      //console.log(pretty.render(err));
+      let entry = {
+        timestamp: new Date().toISOString(),
+        type: 'error',
+        message: err.message
+      }
+      log(entry);
+    }
+  });
+
+  /*
+  portfolio.get_price('eth')
+  .then(portfolio.do_buy.bind(portfolio))
+  .catch((err) => {
+    console.log(pretty.render(err));
+  });
+  */
+}
+
+function log (entry) {
+  fs.appendFileSync(LOG_PATH, JSON.stringify(entry) + "\n");
+}
+
+function stop () {
+  cycle_stop = true;
+  clearTimeout(timer);
+  if (daemon) del_pid();
+}
+
+function set_pid () {
+  fs.appendFileSync('./' + process.pid + '.pid', process.pid);
+}
+
+function del_pid () {
+  fs.unlink('./' + process.pid + '.pid');
+}
+
+if (daemon) require('daemon')();
+
+if (daemon) set_pid();
