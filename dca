@@ -53,6 +53,7 @@ function runTask () {
         message: err.message
       }
       log(entry);
+      console.log(pretty.render(entry));
     }
   });
 
