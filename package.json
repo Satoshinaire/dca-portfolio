@@ -23,7 +23,9 @@
   "author": "Satoshinaire",
   "license": "MIT",
   "dependencies": {
+    "ccxt": "^1.6.65",
     "crypto-js": "^3.1.9-1",
+    "cryptocompare": "^0.2.0",
     "daemon": "^1.1.0",
     "dotenv": "^4.0.0",
     "prettyjson-256": "^1.5.12",
